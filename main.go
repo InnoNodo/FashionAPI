@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"bufio"
+	"strings"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -13,7 +15,9 @@ import (
 func main() {
 	var content string
 	fmt.Print("Write your message: ")
-	fmt.Scanln(&content)
+	reader := bufio.NewReader(os.Stdin)
+    input, _ := reader.ReadString('\n')
+    content = strings.TrimSpace(input)
 
 	url := "https://openrouter.ai/api/v1/chat/completions"
 
