@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"github.com/joho/godotenv"
@@ -20,7 +19,7 @@ func main() {
     input, _ := reader.ReadString('\n')
     content = strings.TrimSpace(input)
 
-	prompt, err := ioutil.ReadFile("prompt.txt")
+	prompt, err := os.ReadFile("prompt.txt")
     if err != nil {
         panic(err)
     }
@@ -47,7 +46,15 @@ func main() {
 		panic(err)
 	}
 
-	godotenv.Load()
+	err = godotenv.Load(".env")
+	if err != nil {
+		panic(err)
+	}
+
+	if os.Getenv("OPEN_ROUTER") == "" {
+		fmt.Println("Please set the OPEN_ROUTER environment variable.")
+		return
+	}
 
 	req.Header.Set("Authorization", os.Getenv("OPEN_ROUTER"))
 	req.Header.Set("Content-Type", "application/json")
@@ -83,5 +90,6 @@ if ok && len(choices) > 0 {
     }
 }	
 
+fmt.Println("No response found in the API response.")
 	
 }
