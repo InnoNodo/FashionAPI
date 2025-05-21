@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"github.com/joho/godotenv"
@@ -19,6 +20,11 @@ func main() {
     input, _ := reader.ReadString('\n')
     content = strings.TrimSpace(input)
 
+	prompt, err := ioutil.ReadFile("prompt.txt")
+    if err != nil {
+        panic(err)
+    }
+
 	url := "https://openrouter.ai/api/v1/chat/completions"
 
 	payload := map[string]interface{}{
@@ -26,7 +32,7 @@ func main() {
 		"messages": []map[string]string{
 			{
 				"role":    "user",
-				"content": content,
+				"content": string(prompt) + content,
 			},
 		},
 	}
